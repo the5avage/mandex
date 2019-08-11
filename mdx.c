@@ -5,12 +5,13 @@
  *             This work is licensed under the terms of the MIT license.
  */
 
+#include <time.h>
 #include <SDL2/SDL.h>
 #include "mandelbrot.h"
 #include "mdx.h"
 #include "screen_xy.h"
 #include "color_palette.h"
-
+#include "saveBmp.h"
 
 // Part of xy-plane which is displayed on the screen
 struct ScreenXY screen = {
@@ -34,7 +35,11 @@ MandelPoint* mandel_front;
 MandelPoint* mandel_back;
 int numMandel;
 
-// For each core one thread is spawned which calculates mandelbrot set
+// Contains the image which is saved to disk
+uint32_t* image_buffer;
+char image_name[51];
+
+// For each cpu core one thread is spawned which calculates the mandelbrot set
 SDL_Thread** threads;
 int numThreads;
 // Threads work on this data
@@ -130,7 +135,6 @@ static int startThreads(void)
         }
     }
     return 0;
-
 }
 
 int mdx_run(int screen_width, int screen_height, int color_depth, int color_style)
@@ -161,10 +165,19 @@ int mdx_run(int screen_width, int screen_height, int color_depth, int color_styl
     }
     initMandelbrot(mandel_front, &screen);
 
+    image_buffer = malloc(screen_width * screen_height * sizeof(uint32_t));
+    if (!image_buffer) {
+        free(colors);
+        free(mandel_front);
+        free(mandel_back);
+        errstr = erralloc;
+    }
+
     if (startThreads()) {
         free(colors);
         free(mandel_front);
         free(mandel_back);
+        free(image_buffer);
         return 1;
     }
 
@@ -197,6 +210,13 @@ static void changeMandel(void)
         SDL_AtomicSetPtr((void**)&workData[i].points, tmp);
         tmp = indexMandelPoint(tmp, thrdPoints);
     }
+}
+
+static void printMandel(void)
+{
+    drawMandelbrot(mandel_front, image_buffer, numMandel, colorPalette, numColors);
+    sprintf(image_name, "%li.bmp", time(NULL));
+    saveBMP(image_name, image_buffer, screen.width, -screen.height);
 }
 
 int mdx_event(void)
@@ -233,6 +253,9 @@ int mdx_event(void)
             case SDLK_o:
                 zoomOut(&screen, zoom_rate);
                 changeMandel();
+                break;
+            case SDLK_p:
+                printMandel();
                 break;
             }
             break;

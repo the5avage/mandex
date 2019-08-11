@@ -15,7 +15,7 @@ int main()
 {
     Window* window = window_create("Fractal Explorer");
     if (window == NULL) {
-        fprintf( stderr, "Create window failed %s\n", window_getError());
+        fprintf(stderr, "Create window failed %s\n", window_getError());
         return 1;
     }
     int width = window_getWidth(window);
