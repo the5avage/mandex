@@ -28,7 +28,6 @@ int main()
     }
 
     mdx_run(width, height, 1000, MDX_COLOR_SMOOTH);
-    window_setMode(window, Window_hideCursor | Window_shown);
     for (;;) {
         uint32_t frame_start = SDL_GetTicks();
         mdx_render(pixels);

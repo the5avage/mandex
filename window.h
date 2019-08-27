@@ -34,28 +34,6 @@ typedef struct window Window;
 
 Window* window_create(const char* name);
 
-/** @brief Mode flags. Can be | together.
- */
-
-enum Window_Mode {
-    Window_shown = 1,
-    Window_hidden = 2,
-    Window_fullscreen = 4,
-    Window_noFullscreen = 8,
-    Window_showCursor = 16,
-    Window_hideCursor = 32
-};
-
-/** @brief Changes the window modus
- *
- *  @param window
- *  @param mode The modes which are changed
- *
- *  @return Zero on success
- */
-
-int window_setMode(Window* window, enum Window_Mode mode);
-
 /** @brief Close the window and free resources
 *
 *   @param window

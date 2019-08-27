@@ -41,8 +41,9 @@ static int initSDL() {
 // both window_create functions have to do this
 static int window_init(Window* window)
 {
-    window->renderer = SDL_CreateRenderer(window->sdlWindow, -1,
-                                            SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
+    window->renderer = SDL_CreateRenderer(window->sdlWindow,
+                                          -1,
+                                          SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (window->renderer == NULL) {
         errmsg = SDL_GetError();
         SDL_DestroyWindow(window->sdlWindow);
@@ -79,7 +80,9 @@ Window* window_create(const char* name)
                                     SDL_WINDOWPOS_UNDEFINED,
                                     SDL_WINDOWPOS_UNDEFINED,
                                     0, 0,
-                                    SDL_WINDOW_FULLSCREEN_DESKTOP | SDL_WINDOW_HIDDEN);
+                                    SDL_WINDOW_FULLSCREEN_DESKTOP);
+
+    SDL_ShowCursor(SDL_DISABLE);
     if (window->sdlWindow == NULL) {
         errmsg = SDL_GetError();
         free(window);
@@ -91,17 +94,6 @@ Window* window_create(const char* name)
         return NULL;
 
     return window;
-}
-
-int window_setMode(Window* window, enum Window_Mode mode)
-{
-    if (mode & Window_shown) {
-        SDL_ShowWindow(window->sdlWindow);
-    }
-    if (mode & Window_hideCursor) {
-        SDL_ShowCursor(SDL_DISABLE);
-    }
-    return 0;
 }
 
 void window_destroy(Window* window)
