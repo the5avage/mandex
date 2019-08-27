@@ -35,8 +35,10 @@ MandelPoint* mandel_front;
 MandelPoint* mandel_back;
 int numMandel;
 
-// Contains the image which is saved to disk
+// Contains the image
 uint32_t* image_buffer;
+
+// filename for .bmp file is saved here
 char image_name[51];
 
 // For each cpu core one thread is spawned which calculates the mandelbrot set
@@ -214,7 +216,6 @@ static void changeMandel(void)
 
 static void printMandel(void)
 {
-    drawMandelbrot(mandel_front, image_buffer, numMandel, colorPalette, numColors);
     sprintf(image_name, "%li.bmp", time(NULL));
     saveBMP(image_name, image_buffer, screen.width, -screen.height);
 }
@@ -264,7 +265,8 @@ int mdx_event(void)
    return 0;
 }
 
-void mdx_render(uint32_t* pixels)
+uint32_t* mdx_render(void)
 {
-    drawMandelbrot(mandel_front, pixels, numMandel, colorPalette, numColors);
+    drawMandelbrot(mandel_front, image_buffer, numMandel, colorPalette, numColors);
+    return image_buffer;
 }

@@ -3,7 +3,7 @@ debug = mandex_dbg
 
 CFLAGS += -Wall -Wextra -pedantic-errors
 OPT = -O3 -march=native
-DBG = -g -O0 -fsanitize=thread #-fsanitize=address -fno-omit-frame-pointer
+DBG = -g -O0 -fsanitize=address -fno-omit-frame-pointer
 LDBG = -lasan
 
 src = $(wildcard *.c)

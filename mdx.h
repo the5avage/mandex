@@ -55,11 +55,10 @@ int mdx_event(void);
 
 /** @brief Renders the screen to a pixel buffer
  *
- *  @param pixels Array which is filled
- *  @return
+ *  @return Pointer to buffer containg the rendered image
  */
 
-void mdx_render(uint32_t* pixels);
+uint32_t* mdx_render();
 
 /** @brief Moves the visible section upwards
 *

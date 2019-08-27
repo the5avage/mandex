@@ -21,16 +21,10 @@ int main()
     int width = window_getWidth(window);
     int height = window_getHeight(window);
 
-    uint32_t* pixels = malloc(width * height * sizeof(uint32_t));
-    if (pixels == NULL) {
-        fprintf(stderr, "Fatal error: malloc failed\n");
-        return 1;
-    }
-
     mdx_run(width, height, 1000, MDX_COLOR_SMOOTH);
     for (;;) {
         uint32_t frame_start = SDL_GetTicks();
-        mdx_render(pixels);
+        uint32_t* pixels = mdx_render();
         window_update(window, pixels);
         if (mdx_event())
             break;
@@ -39,7 +33,6 @@ int main()
             SDL_Delay(FRAMERATE - frame_time);
     }
 
-    free(pixels);
     mdx_quit();
     window_destroy(window);
     return 0;
