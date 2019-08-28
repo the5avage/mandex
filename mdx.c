@@ -216,7 +216,7 @@ static void changeMandel(void)
 
 static void printMandel(void)
 {
-    sprintf(image_name, "%li.bmp", time(NULL));
+    sprintf(image_name, "%li.bmp", (long)time(NULL));
     saveBMP(image_name, image_buffer, screen.width, -screen.height);
 }
 

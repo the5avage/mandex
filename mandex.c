@@ -11,7 +11,7 @@
 
 #define FRAMERATE 30        //period in ms
 
-int main()
+int main(int argc, char* argv[])
 {
     Window* window = window_create("Fractal Explorer");
     if (window == NULL) {
