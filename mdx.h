@@ -13,7 +13,7 @@
 
 #ifndef MDX_H
 
-#include <SDL2/SDL_stdinc.h>
+#include <stdint.h>
 
 /** @brief Possible styles for the color palette.
 *
@@ -33,21 +33,18 @@ enum color_style {
  *  @param screen_height Height of the screen to render
  *  @param The depth of the color palette (number of differnt colors)
  *  @param The style of the color palette (e.g. COLOR_RANDOM or COLOR_SMOOTH)
- *  @return void
+ *  @return 0 if success
  */
 
 int mdx_run(int screen_width, int screen_height, int color_depth, int color_style);
 
 /** @brief Stops the background threads and frees resources
- *
- *  @return void
  */
 
 void mdx_quit(void);
 
 /** @brief Gets events and acts accodingly
  *
- *  @param void
  *  @return true if user wants exit the application
  */
 
@@ -59,12 +56,6 @@ int mdx_event(void);
  */
 
 uint32_t* mdx_render();
-
-/** @brief Moves the visible section upwards
-*
-*   @param void
-*   @return void
-*/
 
 #define MDX_H
 #endif /* MDX_H */
