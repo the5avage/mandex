@@ -14,7 +14,7 @@
 // values while threads still run on the other
 MandelPoint* mandel_front;
 MandelPoint* mandel_back;
-int numMandel;
+int numMandelPoints;
 
 // For each cpu core one thread is spawned which calculates the mandelbrot set
 SDL_Thread** threads;
@@ -28,7 +28,7 @@ struct ThreadData {
 struct ThreadData* workData;
 
 // entry point for thread creation
-int threadFunction(void* data)
+static int threadFunction(void* data)
 {
     struct ThreadData* trdata = data;
     while (trdata->run) {
@@ -40,9 +40,9 @@ int threadFunction(void* data)
 static void initThreadData()
 {
     MandelPoint* mp = mandel_front;
-    int allPoints = numMandel;
-    int thrdPoints = numMandel / numThreads;
-    for (int i = 0; i != numThreads - 1; ++i) {
+    int allPoints = numMandelPoints;
+    int thrdPoints = numMandelPoints / numThreads;
+    for (int i = 0; i < numThreads - 1; ++i) {
         workData[i].numPoints = thrdPoints;
         allPoints -= thrdPoints;
         workData[i].points = mp;
@@ -71,44 +71,66 @@ void mandelthread_quit(void)
     free(mandel_front);
 }
 
-int startThreads(struct ScreenXY* screen)
+static int allocGlobals(void)
 {
-    numMandel = screen->height * screen->width;
-    mandel_front =  createMandelPoint(numMandel);
+    mandel_front =  createMandelPoint(numMandelPoints);
     if (!mandel_front) {
         return 1;
     }
-    mandel_back = createMandelPoint(numMandel);
+
+    mandel_back = createMandelPoint(numMandelPoints);
     if (!mandel_back) {
         free(mandel_front);
         return 1;
     }
-    initMandelbrot(mandel_front, screen);
 
-    numThreads = SDL_GetCPUCount();
     threads = malloc(numThreads * sizeof(SDL_Thread*));
     if (!threads) {
+        free(mandel_front);
+        free(mandel_back);
         return 1;
     }
+
     workData = malloc(numThreads * sizeof(struct ThreadData));
     if (!workData) {
+        free(mandel_front);
+        free(mandel_back);
         free(threads);
         return 1;
     }
+    return 0;
+}
 
-    initThreadData();
-
-    for (int i = 0; i != numThreads; ++i) {
+static int startThreads()
+{
+    for (int i = 0; i < numThreads; ++i) {
         threads[i] = SDL_CreateThread(threadFunction, "calculate Mandelbrot", &workData[i]);
         if (!threads[i]) {
-            for (int j = 0; j != i; ++j) {  // close already spawned threads
-               stopThread(j);
+            for (int j = 0; j < i; ++j) {  // close already spawned threads
+                stopThread(j);
             }
             free(threads);
             free(workData);
-            return 2;
+            return 1;
         }
     }
+    return 0;
+}
+
+int mandelthread_run(struct ScreenXY* screen)
+{
+    numMandelPoints = screen->height * screen->width;
+    numThreads = SDL_GetCPUCount();
+
+    if (allocGlobals())
+        return 1;
+
+    initMandelbrot(mandel_front, screen);
+    initThreadData();
+
+    if(startThreads())
+        return 2;
+
     return 0;
 }
 
@@ -120,8 +142,8 @@ void changeMandel(struct ScreenXY* screen)
 
     initMandelbrot(mandel_front, screen);
 
-    int thrdPoints = numMandel / numThreads;
-    for (int i = 0; i != numThreads; ++i) {
+    int thrdPoints = numMandelPoints / numThreads;
+    for (int i = 0; i < numThreads; ++i) {
         SDL_AtomicSetPtr((void**)&workData[i].points, tmp);
         tmp = indexMandelPoint(tmp, thrdPoints);
     }
@@ -129,5 +151,5 @@ void changeMandel(struct ScreenXY* screen)
 
 void mandelthread_draw(uint32_t* buffer_out, uint32_t* colors, int num_colors)
 {
-    drawMandelbrot(mandel_front, buffer_out, numMandel, colors, num_colors);
+    drawMandelbrot(mandel_front, buffer_out, numMandelPoints, colors, num_colors);
 }

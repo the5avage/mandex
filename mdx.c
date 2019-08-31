@@ -73,7 +73,7 @@ int mdx_run(int screen_width, int screen_height, int color_depth, int color_styl
         errstr = erralloc;
     }
 
-    if (startThreads(&screen)) {
+    if (mandelthread_run(&screen)) {
         free(colors);
         free(image_buffer);
         errstr = errthrd;

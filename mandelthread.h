@@ -22,7 +22,7 @@
  *  @return 0 if success
  */
 
-int startThreads(struct ScreenXY* screen);
+int mandelthread_run(struct ScreenXY* screen);
 
 /** @brief  Changes the points for wich the mandelbrotset is calculated
  *
