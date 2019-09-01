@@ -49,7 +49,7 @@ void window_destroy(Window* window);
 *   @return 0 on success
 */
 
-int window_update(Window* window, uint32_t* pixels);
+int window_update(Window* window, const uint32_t* pixels);
 
 /** @brief Returns the height of the window
 *

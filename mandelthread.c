@@ -118,7 +118,7 @@ static int startThreads()
     return 0;
 }
 
-int mandelthread_run(struct ScreenXY* screen)
+int mandelthread_run(const struct ScreenXY* screen)
 {
     numMandelPoints = screen->height * screen->width;
     numThreads = SDL_GetCPUCount();
@@ -152,7 +152,7 @@ static void changeThreadData(void)
     }
 }
 
-void changeMandel(struct ScreenXY* screen)
+void changeMandel(const struct ScreenXY* screen)
 {
     swap(&mandel_front, &mandel_back);
 
@@ -161,7 +161,7 @@ void changeMandel(struct ScreenXY* screen)
     changeThreadData();
 }
 
-void mandelthread_draw(uint32_t* buffer_out, uint32_t* colors, int num_colors)
+void mandelthread_draw(uint32_t* buffer_out, const uint32_t* colors, int num_colors)
 {
     drawMandelbrot(mandel_front, buffer_out, numMandelPoints, colors, num_colors);
 }

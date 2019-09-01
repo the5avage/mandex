@@ -51,7 +51,7 @@ MandelPoint* indexMandelPoint(MandelPoint* points, int num);
  *  @return void
  */
 
-void initMandelbrot(MandelPoint* points, const struct ScreenXY* restrict screen);
+void initMandelbrot(MandelPoint* points, const struct ScreenXY* screen);
 
 /** @brief Calculates mandelbrot iterations over given points.
 *
@@ -73,11 +73,11 @@ void iterateMandelbrot(MandelPoint* points, int numPoints, int iterations);
  *  @return void
  */
 
-void drawMandelbrot(MandelPoint* points,
-                    uint32_t*    pixels,
-                    int          numPoints,
-                    uint32_t*    colors,
-                    int          numColors);
+void drawMandelbrot(const MandelPoint* points,
+                    uint32_t* pixels,
+                    int numPoints,
+                    const uint32_t* colors,
+                    int numColors);
 
 #define MANDELBROT_H
 #endif /* MANDELBROT_H */

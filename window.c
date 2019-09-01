@@ -107,7 +107,7 @@ void window_destroy(Window* window)
         SDL_Quit();
 }
 
-int window_update(Window* window, uint32_t* pixels)
+int window_update(Window* window, const uint32_t* pixels)
 {
     int check = SDL_UpdateTexture( window->texture,
                                     NULL,

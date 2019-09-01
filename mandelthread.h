@@ -22,14 +22,14 @@
  *  @return 0 if success
  */
 
-int mandelthread_run(struct ScreenXY* screen);
+int mandelthread_run(const struct ScreenXY* screen);
 
 /** @brief  Changes the points for wich the mandelbrotset is calculated
  *
  *  @param  screen Information about wich pixel represents wich point in xy coordinates
  */
 
-void changeMandel(struct ScreenXY* screen);
+void changeMandel(const struct ScreenXY* screen);
 
 /** @brief  Draws the calculated mandelbrotset to the buffer according to color palette
  *
@@ -38,7 +38,7 @@ void changeMandel(struct ScreenXY* screen);
  *  @param  num_colors The size of the color palette
  */
 
-void mandelthread_draw(uint32_t* buffer_out, uint32_t* colors, int num_colors);
+void mandelthread_draw(uint32_t* buffer_out, const uint32_t* colors, int num_colors);
 
 /** @brief  Stops all threads and frees all resources
  */

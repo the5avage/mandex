@@ -62,10 +62,10 @@ void iterateMandelbrot(MandelPoint* points, int numPoints, int iterations)
     }
 }
 
-void drawMandelbrot(MandelPoint* points,
+void drawMandelbrot(const MandelPoint* points,
                     uint32_t*    pixels,
                     int          numPoints,
-                    uint32_t*    colors,
+                    const uint32_t*    colors,
                     int          numColors)
 {
     ptrdiff_t i = numPoints;
@@ -75,7 +75,7 @@ void drawMandelbrot(MandelPoint* points,
 }
 
 
-void initMandelbrot(MandelPoint* points, const struct ScreenXY* restrict screen)
+void initMandelbrot(MandelPoint* points, const struct ScreenXY* screen)
 {
     double mapX = (screen->xMax - screen->xMin) / (double)screen->width;
     double mapY = (screen->yMax - screen->yMin) / (double)screen->height;
