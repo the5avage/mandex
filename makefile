@@ -1,30 +1,19 @@
-prog = mandex
-debug = mandex_dbg
+all: release debug
 
-CFLAGS += -Wall -Wextra -pedantic-errors
-OPT = -O3 -march=native
-DBG = -g -O0 -fsanitize=address -fno-omit-frame-pointer
-LDBG = -lasan
+run:
+	cd bin/release && $(MAKE) run
 
-src = $(wildcard *.c)
-obj = $(src:.c=.o)
+run_debug:
+	cd bin/debug && $(MAKE) run
 
-LDLIBS = `sdl2-config --cflags --libs`
+release:
+	cd bin/release && $(MAKE) all
 
-all: $(prog)
+debug:
+	cd bin/debug && $(MAKE) all
 
-dbg: $(debug)
-
-$(debug): CFLAGS += $(DBG)
-$(debug): LDFLAGS += $(DBG)
-$(debug): LDLIBS += $(LDBG)
-$(debug): $(obj)
-	$(CC) $(LDFLAGS) -o $@ $^ $(LDLIBS)
-
-$(prog): CFLAGS += $(OPT)
-$(prog): LDFLAGS += $(OPT)
-$(prog): $(obj)
 
 .PHONY: clean
 clean:
-	rm -f $(obj) $(prog) $(debug)
+	cd bin/release && $(MAKE) clean
+	cd bin/debug && $(MAKE) clean
