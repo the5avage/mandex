@@ -5,9 +5,9 @@
  *             This work is licensed under the terms of the MIT license.
  */
 
+#include <stdlib.h>
 #include <SDL2/SDL.h>
 #include "mandelbrot.h"
-#include "stdlib.h"
 #include "screen_xy.h"
 
 // Two buffers of MandelPoint so one can get initialised to new
@@ -19,6 +19,7 @@ int numMandelPoints;
 // For each cpu core one thread is spawned which calculates the mandelbrot set
 SDL_Thread** threads;
 int numThreads;
+
 // Threads work on this data
 struct ThreadData {
     MandelPoint* points;
@@ -62,7 +63,7 @@ static void stopThread(int index)
 
 void mandelthread_quit(void)
 {
-    for (int i = 0; i != numThreads; ++i) {
+    for (int i = 0; i < numThreads; ++i) {
         stopThread(i);
     }
     free(threads);
@@ -73,7 +74,7 @@ void mandelthread_quit(void)
 
 static int allocGlobals(void)
 {
-    mandel_front =  createMandelPoint(numMandelPoints);
+    mandel_front = createMandelPoint(numMandelPoints);
     if (!mandel_front) {
         return 1;
     }
@@ -134,19 +135,30 @@ int mandelthread_run(struct ScreenXY* screen)
     return 0;
 }
 
-void changeMandel(struct ScreenXY* screen)
+static inline void swap(MandelPoint** a, MandelPoint** b)
 {
-    MandelPoint* tmp = mandel_back;
-    mandel_back = mandel_front;
-    mandel_front = tmp;
+    MandelPoint* tmp = *a;
+    *a = *b;
+    *b = tmp;
+}
 
-    initMandelbrot(mandel_front, screen);
-
+static void changeThreadData(void)
+{
+    MandelPoint* tmp = mandel_front;
     int thrdPoints = numMandelPoints / numThreads;
     for (int i = 0; i < numThreads; ++i) {
         SDL_AtomicSetPtr((void**)&workData[i].points, tmp);
         tmp = indexMandelPoint(tmp, thrdPoints);
     }
+}
+
+void changeMandel(struct ScreenXY* screen)
+{
+    swap(&mandel_front, &mandel_back);
+
+    initMandelbrot(mandel_front, screen);
+
+    changeThreadData();
 }
 
 void mandelthread_draw(uint32_t* buffer_out, uint32_t* colors, int num_colors)
