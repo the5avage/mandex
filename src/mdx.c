@@ -98,6 +98,15 @@ static void printMandel(void)
     saveBMP(image_name, image_buffer, screen.width, -screen.height);
 }
 
+static void randomColorPalette(void)
+{
+    srand(time(NULL));
+    if (rand() & 3)       // higher change for smooth colors
+        colorSmooth(colorPalette, numColors);
+    else
+        colorRandom(colorPalette, numColors);
+}
+
 int mdx_event(void)
 {
     SDL_Event event;
@@ -135,6 +144,9 @@ int mdx_event(void)
                 break;
             case SDLK_p:
                 printMandel();
+                break;
+            case SDLK_c:
+                randomColorPalette();
                 break;
             }
             break;
