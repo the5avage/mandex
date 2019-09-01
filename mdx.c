@@ -6,6 +6,8 @@
  */
 
 #include <time.h>
+#include <stdlib.h>
+#include <stdio.h>
 #include <SDL2/SDL.h>
 #include "mdx.h"
 #include "screen_xy.h"

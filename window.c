@@ -6,10 +6,10 @@
  */
 
 #include "window.h"
-#include <SDL2/SDL.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <SDL2/SDL.h>
 
 struct window
 {
