@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     int width = window_getWidth(window);
     int height = window_getHeight(window);
 
-    mdx_run(width, height, 1000, MDX_COLOR_SMOOTH);
+    mdx_run(width, height, 1000000, MDX_COLOR_SMOOTH);
     for (;;) {
         uint32_t frame_start = SDL_GetTicks();
         uint32_t* pixels = mdx_render();
