@@ -1,9 +1,16 @@
-prog = mandex
+include ../../makefile.variable
 
-CFLAGS += -Wall -Wextra -pedantic-errors
-OPT = -O3 -march=native
-LDLIBS = `sdl2-config --cflags --libs`
 VPATH = ../../src
+
+prog = $(program_name)
+
+CFLAGS += $(compiler_flags)
+
+LDLIBS += $(libraries)
+
+LDFLAGS += $(release_flags)
+CFLAGS += $(release_flags)
+
 
 src = $(wildcard $(VPATH)/*.c)
 obj_tmp = $(src:.c=.o)
@@ -11,8 +18,6 @@ obj = $(patsubst ../../src/%,%,$(obj_tmp))
 
 all: $(prog)
 
-$(prog): CFLAGS += $(OPT)
-$(prog): LDFLAGS += $(OPT)
 $(prog): $(obj)
 
 run: $(prog)

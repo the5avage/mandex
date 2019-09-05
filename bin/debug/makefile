@@ -1,9 +1,16 @@
-prog = mandex
+include ../../makefile.variable
 
-CFLAGS += -Wall -Wextra -pedantic-errors
-OPT = -g -O0 -fsanitize=address -fno-omit-frame-pointer
-LDLIBS = `sdl2-config --cflags --libs` -lasan
 VPATH = ../../src
+
+prog = $(program_name)
+
+CFLAGS += $(compiler_flags)
+
+LDLIBS += $(libraries)
+
+LDFLAGS += $(debug_flags)
+CFLAGS += $(debug_flags)
+
 
 src = $(wildcard $(VPATH)/*.c)
 obj_tmp = $(src:.c=.o)
@@ -11,8 +18,6 @@ obj = $(patsubst ../../src/%,%,$(obj_tmp))
 
 all: $(prog)
 
-$(prog): CFLAGS += $(OPT)
-$(prog): LDFLAGS += $(OPT)
 $(prog): $(obj)
 
 run: $(prog)

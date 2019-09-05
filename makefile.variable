@@ -1,0 +1,6 @@
+program_name = mandex
+compiler_flags = -Wall -Wextra -pedantic-errors
+release_flags = -O3
+debug_flags = -g -O0 -fsanitize=address -fno-omit-frame-pointer
+libraries = `sdl2-config --cflags --libs`
+debug_libraries = -lasan
