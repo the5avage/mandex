@@ -5,6 +5,8 @@ With the mandelbrot explorer you can move around and zoom deeply into the [mande
 It is possible to switch between randomly created color palettes, so the number of beautiful images is literally infinite.
 You can safe images you like and since they have the resolution of your desktop they are well suited as wallpaper.
 
+For some example images created with this program look at the [gallery](https://the5avage.github.io/mandex/).
+
 ## Installation
 
 ### Linux
