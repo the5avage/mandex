@@ -45,7 +45,9 @@ it might take a while until the image is fully rendered.
 
 ## Development setup
 
-To build from source you have to install [SDL2](https://wiki.libsdl.org/Installation) development library. 
+To build from source you have to install [SDL2](https://wiki.libsdl.org/Installation) development library.
+
+You can modify build options in the [makefile.variables](https://github.com/the5avage/mandex/blob/master/makefile.variable) file.
 
 ### Linux
 
@@ -56,8 +58,7 @@ sudo apt-get install libsdl2-dev
 ### Windows
 
 The windows release was build with msys2 and mingw64.
-If you want to build the debug version on windows you have to edit the makefile in ``bin/debug`` because AddressSanitizer 
-is not available on windows.
+If you want to build the debug version on windows you have to edit the [makefile.variables](https://github.com/the5avage/mandex/blob/master/makefile.variable) file because AddressSanitizer is not available on windows.
 
 ## Contributing
 
