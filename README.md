@@ -63,7 +63,7 @@ If you want to build the debug version on windows you have to edit the [makefile
 ## Contributing
 
 There is still a lot of room for improvment and i would be glad if you want to contribute.
-Since the mandelbrot set is a mathematically easy, but computationally expensive, algorithm it is well suited to learn about high performance computing.
+Since the mandelbrot set is a mathematically easy, but computationally expensive, algorithm, it is well suited to learn about high performance computing.
 Here is a short list of improvments, which i think are intresting. If you have an idea you can just create an issue and explain it.
 
 * Optimize the calculation of the mandelbrot set for speed by
