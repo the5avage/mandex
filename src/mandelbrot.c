@@ -16,11 +16,9 @@ struct complexd {
     double im;
 };
 
-
 struct MandelPoint {
     struct complexd c;
     struct complexd z;
-    struct complexd z2;
     uint32_t diverged;
     uint32_t iterations;
 };
@@ -35,30 +33,30 @@ MandelPoint* indexMandelPoint(MandelPoint* points, int num)
     return points + num;
 }
 
-// calculates one iteration for the given point
-static inline void point_next(MandelPoint* p)
-{
-    if (p->diverged)
-        return;
-
-    p->z.im = 2.0 * p->z.re * p->z.im + p->c.im;
-    p->z.re = p->z2.re - p->z2.im + p->c.re;
-    p->z2.re = p->z.re * p->z.re;
-    p->z2.im = p->z.im * p->z.im;
-
-    if ((p->z2.re + p->z2.im > 4.0 ))
-        p->diverged = p->iterations;
-    else
-        ++(p->iterations);
-}
-
 void iterateMandelbrot(MandelPoint* points, int numPoints, int iterations)
 {
     while(numPoints--) {
         int i = iterations;
+        MandelPoint p = points[numPoints];
+        if (p.diverged)
+            continue;
+
+        double z2_re = p.z.re * p.z.re;
+        double z2_im = p.z.im * p.z.im;
+
         while (i--) {
-            point_next(points + numPoints);
+            p.z.im = 2.0 * p.z.re * p.z.im + p.c.im;
+            p.z.re = z2_re - z2_im + p.c.re;
+            z2_re = p.z.re * p.z.re;
+            z2_im = p.z.im * p.z.im;
+            if ((z2_re + z2_im > 4.0 )) {
+                p.diverged = p.iterations;
+                break;
+            }
+            else
+                ++(p.iterations);
         }
+        points[numPoints] = p;
     }
 }
 
@@ -86,7 +84,10 @@ void initMandelbrot(MandelPoint* points, const struct ScreenXY* screen)
         while (w--) {
             points[--i].c.re = (double)w * mapX + screen->xMin;
             points[i].c.im = (double)h * mapY + screen->yMin;
-            memset(&points[i].z, 0, 2 * (sizeof(struct complexd) + sizeof(uint32_t)));
+            points[i].z.im = 0.0;
+            points[i].z.re = 0.0,
+            points[i].diverged = 0;
+            points[i].iterations = 0;
         }
     }
 }
