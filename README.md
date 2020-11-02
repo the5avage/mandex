@@ -5,6 +5,10 @@ With the mandelbrot explorer you can move around and zoom deeply into the [mande
 It is possible to switch between randomly created color palettes, so the number of beautiful images is literally infinite.
 You can safe images you like and since they have the resolution of your desktop they are well suited as wallpaper.
 
+There is now a WebAssembly version avaliable, so you can [run it in your browser](https://the5avage.github.io/mandex/mandex.html).
+The WebAssembly version doesn't use multithreading (because it's not enabled in all browsers by default). 
+If you like it i still recommend downloading the native binary.
+
 For some example images created with this program look at the [gallery](https://the5avage.github.io/mandex/).
 
 ## Installation
