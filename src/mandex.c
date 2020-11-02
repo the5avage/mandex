@@ -6,10 +6,18 @@
  */
 
 #include <SDL2/SDL.h>
+#include <emscripten.h>
 #include "mdx.h"
 #include "window.h"
 
 #define FRAMERATE 30        //period in ms
+
+void mainloop(void* arg)
+{
+    uint32_t* image = mdx_render();
+    window_update(arg, image);
+    mdx_event();
+}
 
 int main(int argc, char* argv[])
 {
@@ -21,17 +29,9 @@ int main(int argc, char* argv[])
     int width = window_getWidth(window);
     int height = window_getHeight(window);
 
-    mdx_run(width, height, 1000000, MDX_COLOR_SMOOTH);
-    for (;;) {
-        uint32_t frame_start = SDL_GetTicks();
-        uint32_t* pixels = mdx_render();
-        window_update(window, pixels);
-        if (mdx_event())
-            break;
-        uint32_t frame_time = SDL_GetTicks() - frame_start;
-        if (frame_time < FRAMERATE)
-            SDL_Delay(FRAMERATE - frame_time);
-    }
+    mdx_run(width, height, 10000, MDX_COLOR_SMOOTH);
+
+    emscripten_set_main_loop_arg(mainloop, window, -1, 1);
 
     mdx_quit();
     window_destroy(window);

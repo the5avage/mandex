@@ -12,8 +12,8 @@
 #include "mdx.h"
 #include "screen_xy.h"
 #include "color_palette.h"
-#include "mandelthread.h"
 #include "saveBmp.h"
+#include "mandelbrot.h"
 
 // Part of xy-plane which is displayed on the screen
 struct ScreenXY screen = {
@@ -33,6 +33,7 @@ int numColors;
 
 // Contains the image
 uint32_t* image_buffer;
+MandelPoint* mandelpoints;
 
 // filename for .bmp file is saved here
 char image_name[51];
@@ -75,19 +76,20 @@ int mdx_run(int screen_width, int screen_height, int color_depth, int color_styl
         errstr = erralloc;
     }
 
-    if (mandelthread_run(&screen)) {
+    mandelpoints = malloc(screen_width * screen_height * sizeof(MandelPoint));
+    if (!mandelpoints) {
         free(colors);
         free(image_buffer);
-        errstr = errthrd;
-        return 1;
+        errstr = erralloc;
     }
+    initMandelbrot(mandelpoints, &screen);
 
     return 0;
 }
 
 void mdx_quit(void)
 {
-    mandelthread_quit();
+    free(mandelpoints);
     free(colorPalette);
     free(image_buffer);
 }
@@ -120,27 +122,27 @@ int mdx_event(void)
                 return 1;
             case SDLK_DOWN:
                 moveDown(&screen, move_rate);
-                changeMandel(&screen);
+                initMandelbrot(mandelpoints, &screen);
                 break;
             case SDLK_UP:
                 moveUp(&screen, move_rate);
-                changeMandel(&screen);
+                initMandelbrot(mandelpoints, &screen);
                 break;
             case SDLK_RIGHT:
                 moveRight(&screen, move_rate);
-                changeMandel(&screen);
+                initMandelbrot(mandelpoints, &screen);
                 break;
             case SDLK_LEFT:
                 moveLeft(&screen, move_rate);
-                changeMandel(&screen);
+                initMandelbrot(mandelpoints, &screen);
                 break;
             case SDLK_i:
                 zoomIn(&screen, zoom_rate);
-                changeMandel(&screen);
+                initMandelbrot(mandelpoints, &screen);
                 break;
             case SDLK_o:
                 zoomOut(&screen, zoom_rate);
-                changeMandel(&screen);
+                initMandelbrot(mandelpoints, &screen);
                 break;
             case SDLK_p:
                 printMandel();
@@ -157,6 +159,7 @@ int mdx_event(void)
 
 uint32_t* mdx_render(void)
 {
-    mandelthread_draw(image_buffer, colorPalette, numColors);
+    iterateMandelbrot(mandelpoints, screen.width * screen.height, 100);
+    drawMandelbrot(mandelpoints, image_buffer, screen.width*screen.height, colorPalette, numColors);
     return image_buffer;
 }

@@ -1,16 +1,14 @@
-include ../../makefile.variable
-
 VPATH = ../../src
 
-prog = $(program_name)
+prog = mandex.js
 
-CFLAGS += $(compiler_flags)
+CC = emcc
 
-LDLIBS += $(libraries)
+CFLAGS = -O3 -Wall
 
-LDFLAGS += $(release_flags)
-CFLAGS += $(release_flags)
+LDLIBS = -s WASM=1 -s USE_SDL=2
 
+LDFLAGS = -Wall -s ALLOW_MEMORY_GROWTH=1
 
 src = $(wildcard $(VPATH)/*.c)
 obj_tmp = $(src:.c=.o)
@@ -19,9 +17,10 @@ obj = $(patsubst ../../src/%,%,$(obj_tmp))
 all: $(prog)
 
 $(prog): $(obj)
+	$(CC) $(LDFLAGS) $(LDLIBS) $(obj) -o $(prog)
 
 run: $(prog)
-	./$(prog)
+	emrun mandex.html
 
 .PHONY: clean
 clean:

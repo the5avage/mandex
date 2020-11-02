@@ -1,24 +1,11 @@
-all: release debug
+all: release
 
 run:
-	cd bin/release && $(MAKE) run
-
-run_debug:
-	cd bin/debug && $(MAKE) run
+	cd bin/webasm && $(MAKE) run
 
 release:
-	cd bin/release && $(MAKE) all
-
-debug:
-	cd bin/debug && $(MAKE) all
-
-.PHONY: clean_release
-clean_release:
-	cd bin/release && $(MAKE) clean
-
-.PHONY: clean_debug
-clean_debug:
-	cd bin/debug && $(MAKE) clean
+	cd bin/webasm && $(MAKE) all
 
 .PHONY: clean
-clean: clean_release clean_debug
+clean:
+	cd bin/webasm && $(MAKE) clean

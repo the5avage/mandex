@@ -16,13 +16,23 @@
 #include <stdint.h>
 #include "screen_xy.h"
 
+// complex double
+struct complexd {
+    double re;
+    double im;
+};
 
 /** @brief   Contains information for a complex point in mandelbrotset.
  *
  *  @details Each point corresponds to one pixel of the screen.
  */
 
-typedef struct MandelPoint MandelPoint;
+typedef struct MandelPoint {
+    struct complexd c;
+    struct complexd z;
+    uint32_t diverged;
+    uint32_t iterations;
+} MandelPoint;
 
 /** @brief Allocates memory for number of MandelPoints
  *
